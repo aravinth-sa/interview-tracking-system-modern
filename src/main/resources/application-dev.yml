@@ -15,6 +15,15 @@ spring:
       ddl-auto: create-drop
     show-sql: true
 
+  # Flyway disabled in dev — Hibernate create-drop handles the schema,
+  # and data.sql seeds the initial users
+  flyway:
+    enabled: false
+
+  sql:
+    init:
+      mode: always   # tells Spring Boot to always run data.sql on startup
+
 logging:
   level:
     com.wipro.its: DEBUG

@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: its-postgres
+  namespace: its
+spec:
+  replicas: 1           # always 1 for a DB — you don't scale stateful DBs horizontally like this
+  selector:
+    matchLabels:
+      app: its-postgres
+  template:
+    metadata:
+      labels:
+        app: its-postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:15-alpine
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:    # ← reads DB_NAME from ConfigMap, not hardcoded
+                  name: its-config
+                  key: DB_NAME
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:       # ← pulls DB_PASSWORD from our Secret
+                  name: its-secret
+                  key: DB_PASSWORD
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data  # where PostgreSQL stores its data files
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"       # 250 millicores = 0.25 CPU
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          readinessProbe:
+            exec:
+              command: ["pg_isready", "-U", "postgres", "-d", "$(POSTGRES_DB)"]
+              # ↑ $(POSTGRES_DB) is resolved from the env var defined above in this same container
+              # K8s substitutes env vars in command/args using $(VAR_NAME) syntax
+            initialDelaySeconds: 10
+            periodSeconds: 5
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: postgres-pvc   # links to the PVC we created above

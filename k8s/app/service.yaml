@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: its-app-service
+  namespace: its
+spec:
+  selector:
+    app: its-app
+  ports:
+    - port: 80            # external port (users hit port 80)
+      targetPort: 8080    # internal pod port (Spring Boot listens on 8080)
+  type: NodePort
+  # ── Service types explained ──────────────────────────────────────────
+  # ClusterIP  → internal only (used for postgres above)
+  # NodePort   → opens a port on every cluster node, reachable from outside
+  #              Good for: minikube, Civo, bare-metal, learning
+  # LoadBalancer → provisions a cloud load balancer (AWS ELB, GCP LB etc.)
+  #              Good for: managed K8s (GKE, EKS, AKS) — costs extra money
+  #
+  # On minikube run: minikube service its-app-service -n its
+  # It will open the URL in your browser automatically

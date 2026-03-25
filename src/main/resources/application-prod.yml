@@ -1,12 +1,18 @@
 spring:
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: validate   # Hibernate only validates — Flyway owns the schema
     show-sql: false
-  
+
   datasource:
     hikari:
       maximum-pool-size: 20
+
+  # Flyway enabled in prod — runs migration scripts at startup
+  flyway:
+    enabled: true
+    locations: classpath:db/migration   # where your V1__, V2__ files live
+    baseline-on-migrate: true           # safe for first run on existing DB
 
 logging:
   level:

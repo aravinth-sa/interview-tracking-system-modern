@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: its-postgres-service   # ← this is the hostname Spring Boot uses: jdbc:postgresql://its-postgres-service:5432/its_db
+  namespace: its
+spec:
+  selector:
+    app: its-postgres           # routes traffic to pods with this label
+  ports:
+    - port: 5432
+      targetPort: 5432
+  type: ClusterIP               # internal only — PostgreSQL is never exposed to the internet

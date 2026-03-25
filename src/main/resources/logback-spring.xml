@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!--
+        logback-spring.xml — full logging configuration
+        Spring Boot reads this automatically from src/main/resources/
+
+        Why use this instead of application.yml logging section?
+        - application.yml only controls log LEVELS
+        - This file controls levels + format + destination + rotation + profiles
+        - <springProfile> tag lets you define different behaviour per environment
+    -->
+
+    <!-- ══════════════════════════════════════════════════════════════
+         PROPERTIES — reusable variables (like constants in Java)
+         ══════════════════════════════════════════════════════════════ -->
+    <property name="APP_NAME"  value="interview-tracking-system"/>
+    <property name="LOG_PATH"  value="logs"/>
+    <property name="LOG_FILE"  value="${LOG_PATH}/${APP_NAME}"/>
+
+    <!-- ══════════════════════════════════════════════════════════════
+         DEV PROFILE — coloured console output, human-readable
+         Active when: spring.profiles.active=dev
+         ══════════════════════════════════════════════════════════════ -->
+    <springProfile name="dev">
+
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <!--
+                    Pattern breakdown:
+                    %d{HH:mm:ss.SSS}       → timestamp (time only, no date — less noise in dev)
+                    %highlight(%-5level)   → log level coloured: ERROR=red, WARN=yellow, INFO=green
+                    %cyan(%logger{36})     → logger name in cyan, trimmed to 36 chars
+                    %msg%n                 → the actual log message + newline
+                -->
+                <pattern>%d{HH:mm:ss.SSS} %highlight(%-5level) %cyan(%logger{36}) - %msg%n</pattern>
+            </encoder>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+
+        <!-- Your app code → DEBUG so you see everything during development -->
+        <logger name="com.wipro.its"            level="DEBUG"/>
+
+        <!-- See the SQL queries Hibernate generates -->
+        <logger name="org.hibernate.SQL"        level="DEBUG"/>
+
+        <!-- See the values bound to SQL query parameters -->
+        <logger name="org.hibernate.orm.jdbc.bind" level="TRACE"/>
+
+        <!-- Reduce Spring Security noise in dev (set to DEBUG if debugging auth) -->
+        <logger name="org.springframework.security" level="INFO"/>
+
+    </springProfile>
+
+    <!-- ══════════════════════════════════════════════════════════════
+         PROD PROFILE — file output with daily rotation
+         Active when: spring.profiles.active=prod
+         ══════════════════════════════════════════════════════════════ -->
+    <springProfile name="prod">
+
+        <!--
+            RollingFileAppender writes to a file and rotates it automatically.
+            Without rotation, a log file grows forever and fills the disk.
+        -->
+        <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${LOG_FILE}.log</file>
+
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <!-- New file created every day: app-2026-03-25.log, app-2026-03-26.log ... -->
+                <fileNamePattern>${LOG_FILE}.%d{yyyy-MM-dd}.log</fileNamePattern>
+
+                <!-- Keep logs for 30 days, then auto-delete older ones -->
+                <maxHistory>30</maxHistory>
+
+                <!-- Cap total log storage at 1GB regardless of maxHistory -->
+                <totalSizeCap>1GB</totalSizeCap>
+            </rollingPolicy>
+
+            <encoder>
+                <!--
+                    Prod format includes full date + thread name (useful for debugging
+                    multi-threaded issues, race conditions, slow requests etc.)
+                -->
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            </encoder>
+        </appender>
+
+        <!-- Also keep a console appender for K8s — kubectl logs reads stdout -->
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            </encoder>
+        </appender>
+
+        <root level="WARN">
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="CONSOLE"/>
+        </root>
+
+        <!-- Your app code → INFO in prod (DEBUG would flood the logs) -->
+        <logger name="com.wipro.its"                level="INFO"/>
+
+        <!-- No SQL logging in prod — performance + no sensitive data in logs -->
+        <logger name="org.hibernate.SQL"            level="WARN"/>
+        <logger name="org.springframework.web"      level="WARN"/>
+        <logger name="org.springframework.security" level="WARN"/>
+
+    </springProfile>
+
+</configuration>

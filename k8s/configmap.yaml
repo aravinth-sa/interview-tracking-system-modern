@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: its-config
+  namespace: its
+data:
+  # These become environment variables injected into the Spring Boot pod.
+  # Spring Boot reads them via ${DB_URL}, ${DB_USERNAME} etc. in application.yml
+  SPRING_PROFILES_ACTIVE: "prod"
+  SERVER_PORT: "8080"
+  DB_NAME: "its_db"            # ← single source of truth for the database name
+  DB_URL: "jdbc:postgresql://its-postgres-service:5432/its_db"
+  DB_USERNAME: "postgres"

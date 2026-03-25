@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: its-app
+  namespace: its
+spec:
+  replicas: 2             # start with 2 pods — HPA will scale this up/down
+  selector:
+    matchLabels:
+      app: its-app
+  template:
+    metadata:
+      labels:
+        app: its-app
+      annotations:
+        # When you change configmap.yaml, recompute this checksum and apply.
+        # K8s sees the pod spec changed → triggers automatic rolling restart.
+        # Run: kubectl get configmap its-config -n its -o yaml | sha256sum
+        # Then paste the hash here before applying.
+        checksum/config: "placeholder-replace-with-sha256-of-configmap"
+    spec:
+      containers:
+        - name: its-app
+          image: docker.io/aravinth/its-app:2.0.0     # replace with your actual image: docker.io/yourname/its-app:2.0.0
+          ports:
+            - containerPort: 8080
+          # ── Inject all config from ConfigMap ──────────────────────────
+          envFrom:
+            - configMapRef:
+                name: its-config
+            - secretRef:
+                name: its-secret
+          # ── Liveness probe: if this fails K8s restarts the pod ────────
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 60   # give Spring Boot time to start
+            periodSeconds: 10
+            failureThreshold: 3
+          # ── Readiness probe: if this fails K8s stops sending traffic ──
+          # (pod stays alive but removed from load balancer until ready)
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 3
+          # ── Resource limits (required for HPA to work) ────────────────
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"

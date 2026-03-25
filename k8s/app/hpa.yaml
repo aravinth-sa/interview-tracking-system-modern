@@ -1,0 +1,34 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: its-app-hpa
+  namespace: its
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: its-app           # watches this Deployment
+  minReplicas: 2            # never go below 2 (high availability — if 1 pod crashes, another is already running)
+  maxReplicas: 5            # never go above 5 (cost control)
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70   # if average CPU across all pods > 70%, scale up
+  # ── How auto-scaling works ───────────────────────────────────────────
+  # 1. Metrics Server (runs in K8s) collects CPU/memory per pod every 15s
+  # 2. HPA checks every 15s:
+  #      current replicas × current CPU% = desired replicas × 70%
+  #      → solves for desired replicas and adjusts
+  # 3. Scale-up: immediate (within 1-2 minutes)
+  # 4. Scale-down: waits 5 minutes by default (prevents flapping)
+  #
+  # Example:
+  #   2 pods running, both at 90% CPU
+  #   HPA calculates: (2 × 90) / 70 = 2.57 → rounds up to 3 pods
+  #   K8s adds 1 more pod
+  #
+  # NOTE: Resource limits/requests in deployment.yaml are REQUIRED
+  # for HPA to calculate utilization percentages.

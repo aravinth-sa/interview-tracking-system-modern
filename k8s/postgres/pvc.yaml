@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+  namespace: its
+spec:
+  accessModes:
+    - ReadWriteOnce      # one node can read/write at a time (fine for a single DB pod)
+  resources:
+    requests:
+      storage: 1Gi       # 1GB disk — enough for a dev/learning setup
+  # storageClassName not set → uses the cluster's default storage class
+  # On minikube: hostpath (local disk)
+  # On Oracle/GKE/Civo: their cloud block storage
