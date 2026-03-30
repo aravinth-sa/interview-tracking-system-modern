@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mvn spring-boot:run -Dspring-boot.run.profiles=dev -U)",
+      "WebSearch",
+      "Bash(mvn spring-boot:run -Dspring-boot.run.profiles=dev)"
+    ]
+  }
+}

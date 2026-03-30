@@ -1,12 +1,12 @@
 package com.wipro.its.mapper;
 
 import com.wipro.its.entity.User;
-import org.mapstruct.Mapper;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring")
-public interface UserMapper {
-    // Placeholder for future DTO mappings (e.g., UserResponse for admin user listing)
-    default String toDisplayName(User user) {
+@Component
+public class UserMapper {
+
+    public String toDisplayName(User user) {
         return user.getUserId() + " (" + user.getUserType().name() + ")";
     }
 }

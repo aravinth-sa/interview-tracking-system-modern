@@ -23,6 +23,8 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Override Spring Boot's managed 1.18.30 — 1.18.44 adds Java 25 support -->
+        <lombok.version>1.18.44</lombok.version>
     </properties>
     
     <dependencies>
@@ -93,20 +95,9 @@
             <optional>true</optional>
         </dependency>
         
-        <!-- MapStruct for DTO mapping -->
-        <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct</artifactId>
-            <version>1.5.5.Final</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct-processor</artifactId>
-            <version>1.5.5.Final</version>
-            <scope>provided</scope>
-        </dependency>
-        
+        <!-- MapStruct removed: does not support Java 25 (annotation processor crashes).
+             Mapping is done manually in service private toResponse() methods instead. -->
+
         <!-- Springdoc OpenAPI (Swagger) -->
         <dependency>
             <groupId>org.springdoc</groupId>
@@ -120,11 +111,8 @@
             <artifactId>flyway-core</artifactId>
         </dependency>
 
-        <!-- Flyway 10+ requires this separate module for PostgreSQL support -->
-        <dependency>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-database-postgresql</artifactId>
-        </dependency>
+        <!-- Note: flyway-core 9.x (managed by Spring Boot 3.2.2) includes PostgreSQL support built-in.
+             The separate flyway-database-postgresql module only exists in Flyway 10+. -->
 
         <!-- Testing -->
         <dependency>
@@ -142,6 +130,22 @@
     
     <build>
         <plugins>
+
+            <!-- From JDK23+, Lombok must be declared explicitly as an annotation processor -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
