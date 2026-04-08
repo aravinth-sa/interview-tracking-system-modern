@@ -1,0 +1,72 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="CFpYx0eY11OIEC04sSxU">
+    <mxGraphModel dx="2054" dy="1103" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="UHvMDxPtTOn4ehn-yqgK-20" parent="1" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=4;dashed=1;verticalAlign=top;align=left;" value="MiniKube Namespace ITS" vertex="1">
+          <mxGeometry height="420" width="460" x="160" y="330" as="geometry" />
+        </mxCell>
+        <mxCell id="UHvMDxPtTOn4ehn-yqgK-10" connectable="0" parent="1" style="group" value="" vertex="1">
+          <mxGeometry height="110" width="240" x="280" y="610" as="geometry" />
+        </mxCell>
+        <mxCell id="UHvMDxPtTOn4ehn-yqgK-4" parent="UHvMDxPtTOn4ehn-yqgK-10" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;" value="Postgres DB&lt;div&gt;(PVC)&lt;/div&gt;" vertex="1">
+          <mxGeometry height="110.00000000000001" width="239.99999999999997" as="geometry" />
+        </mxCell>
+        <mxCell id="UHvMDxPtTOn4ehn-yqgK-6" parent="UHvMDxPtTOn4ehn-yqgK-10" style="whiteSpace=wrap;html=1;aspect=fixed;" value="pod1" vertex="1">
+          <mxGeometry height="50" width="50" x="86.66666666666666" y="44" as="geometry" />
+        </mxCell>
+        <mxCell id="UHvMDxPtTOn4ehn-yqgK-11" connectable="0" parent="1" style="group" value="" vertex="1">
+          <mxGeometry height="90" width="240" x="275" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="UHvMDxPtTOn4ehn-yqgK-3" parent="UHvMDxPtTOn4ehn-yqgK-11" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;" value="ITS" vertex="1">
+          <mxGeometry height="90" width="240" as="geometry" />
+        </mxCell>
+        <mxCell id="UHvMDxPtTOn4ehn-yqgK-7" parent="UHvMDxPtTOn4ehn-yqgK-11" style="whiteSpace=wrap;html=1;aspect=fixed;" value="pod1" vertex="1">
+          <mxGeometry height="50" width="50" x="15" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="UHvMDxPtTOn4ehn-yqgK-8" parent="UHvMDxPtTOn4ehn-yqgK-11" style="whiteSpace=wrap;html=1;aspect=fixed;" value="pod2" vertex="1">
+          <mxGeometry height="50" width="50" x="90" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="UHvMDxPtTOn4ehn-yqgK-9" parent="UHvMDxPtTOn4ehn-yqgK-11" style="whiteSpace=wrap;html=1;aspect=fixed;" value="pod 3" vertex="1">
+          <mxGeometry height="50" width="50" x="160" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="UHvMDxPtTOn4ehn-yqgK-14" edge="1" parent="1" source="UHvMDxPtTOn4ehn-yqgK-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="UHvMDxPtTOn4ehn-yqgK-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="UHvMDxPtTOn4ehn-yqgK-12" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Docker" vertex="1">
+          <mxGeometry height="60" width="120" x="335" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="UHvMDxPtTOn4ehn-yqgK-17" edge="1" parent="1" source="UHvMDxPtTOn4ehn-yqgK-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="UHvMDxPtTOn4ehn-yqgK-15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="UHvMDxPtTOn4ehn-yqgK-23" connectable="0" parent="UHvMDxPtTOn4ehn-yqgK-17" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="minikube load image&amp;nbsp;" vertex="1">
+          <mxGeometry relative="1" x="-0.48" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UHvMDxPtTOn4ehn-yqgK-13" parent="1" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" value="ITS image" vertex="1">
+          <mxGeometry height="80" width="80" x="355" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="UHvMDxPtTOn4ehn-yqgK-15" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Its-deployment.yaml" vertex="1">
+          <mxGeometry height="40" width="240" x="275" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="UHvMDxPtTOn4ehn-yqgK-16" parent="1" style="rounded=0;whiteSpace=wrap;html=1;horizontal=0;" value="Its service.yaml" vertex="1">
+          <mxGeometry height="90" width="40" x="215" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="UHvMDxPtTOn4ehn-yqgK-18" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" value="Actor" vertex="1">
+          <mxGeometry height="60" width="30" x="30" y="445" as="geometry" />
+        </mxCell>
+        <mxCell id="UHvMDxPtTOn4ehn-yqgK-19" edge="1" parent="1" source="UHvMDxPtTOn4ehn-yqgK-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.075;entryY=0.611;entryDx=0;entryDy=0;entryPerimeter=0;" target="UHvMDxPtTOn4ehn-yqgK-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="UHvMDxPtTOn4ehn-yqgK-21" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="postgres-deployment.yaml" vertex="1">
+          <mxGeometry height="40" width="240" x="280" y="550" as="geometry" />
+        </mxCell>
+        <mxCell id="UHvMDxPtTOn4ehn-yqgK-22" parent="1" style="rounded=0;whiteSpace=wrap;html=1;horizontal=0;" value="postgres-service.yaml" vertex="1">
+          <mxGeometry height="110" width="40" x="220" y="610" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
